@@ -48,7 +48,7 @@ class Slider extends Component {
       this.query = _.shuffle(_.clone(this.words.slice()));
     }
 
-    this.activeSlide = _.first(this.query.slice());
+    this.activeSlide = _.first(this.query.slice()) || {};
     this.query = _.drop(this.query.slice());
   }
 

@@ -10,6 +10,10 @@ export default class Scenario {
       this.items = [];
     }
 
+    if (! this.items) {
+      this.items = [];
+    }
+
     this.remove = this.remove.bind(this);
   }
 

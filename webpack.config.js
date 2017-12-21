@@ -19,12 +19,12 @@ module.exports = {
     new webpack.HotModuleReplacementPlugin()
   ],
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx']
   },
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loaders: ['babel'],
+      loaders: ['babel-loader'],
       include: path.join(__dirname, 'src')
     }]
   },
@@ -33,9 +33,6 @@ module.exports = {
     historyApiFallback: true,
     progress: true,
     hot: true,
-    stats: 'errors-only',
-    plugins: [
-      new webpack.optimize.OccurenceOrderPlugin()
-    ]
+    stats: 'errors-only'
   }
 };
