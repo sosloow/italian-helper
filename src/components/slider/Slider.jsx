@@ -13,7 +13,8 @@ const slideStyle = {
 };
 
 const imgStyle = {
-  height: '100%',
+  maxHeight: '100%',
+  maxWidth: '100%',
   display: 'inline-block',
   margin: '0 auto'
 };
@@ -30,37 +31,51 @@ const numberSliderStyle = {
 class Slider extends Component {
   @observable query = [];
   @observable activeSlide = {};
-  @observable slideInterval = 1000;
+  @observable slideInterval = 3000;
 
   constructor(props) {
     super(props);
+    let lastSlideUpdate = 0;
 
     this.words = this.props.store.Word.items;
 
     this.nextSlide = this.nextSlide.bind(this);
+    this.onIntervalInputChange = this.onIntervalInputChange.bind(this);
 
-    this.nextSlide();
-    setInterval(this.nextSlide, 1000);
+    setInterval(() => {
+      if (lastSlideUpdate + this.slideInterval > Date.now()) {
+        return;
+      }
+
+      lastSlideUpdate = Date.now();
+      this.nextSlide();
+    }, 100);
   }
 
   nextSlide() {
     if (this.query.length < 1) {
-      this.query = _.shuffle(_.clone(this.words.slice()));
+      this.query = _.shuffle(Array.from(this.words));
     }
 
-    this.activeSlide = _.first(this.query.slice()) || {};
-    this.query = _.drop(this.query.slice());
+    this.activeSlide = _.first(Array.from(this.query)) || {};
+    this.query = _.drop(Array.from(this.query));
+
+  }
+
+  onIntervalInputChange(event, value) {
+    this.slideInterval = value;
   }
 
   render() {
     return (
       <div>
         <NumberSlider
-          min={500}
-          max={3000}
+          min={1000}
+          max={10000}
           step={100}
           value={this.slideInterval}
-          style={numberSliderStyle} />
+          style={numberSliderStyle}
+          onChange={this.onIntervalInputChange} />
         <Paper style={slideStyle} zDepth={1}>
           <img style={imgStyle} src={this.activeSlide.imageUrl} />
         </Paper>
